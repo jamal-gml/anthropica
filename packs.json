@@ -1,0 +1,116 @@
+{
+  "version": "1.2.0",
+  "marketplace": {
+    "name": "anthropica",
+    "owner": { "name": "Jamal-GML", "url": "https://github.com/jamal-gml" },
+    "description": "Role-based Claude skill packs for engineering, DevOps, infrastructure, design, marketing, SEO, QA and security teams."
+  },
+  "author": { "name": "Jamal-GML", "url": "https://github.com/jamal-gml" },
+  "repository": "https://github.com/jamal-gml/anthropica",
+  "license": "MIT",
+  "core": ["token-efficiency", "prompt-engineering", "technical-documentation"],
+  "packs": [
+    {
+      "name": "anthropica",
+      "title": "Full library",
+      "role": "Everyone who wants every skill and agent",
+      "description": "Every Anthropica skill and specialist agent in one plugin.",
+      "category": "development",
+      "skills": "*",
+      "agents": "*"
+    },
+    {
+      "name": "anthropica-devops",
+      "title": "DevOps",
+      "role": "DevOps and platform engineers",
+      "description": "GitHub commits, PRs, Actions and governance, CI/CD, releases, containers, observability and incident response.",
+      "category": "development",
+      "skills": [
+        "github-commits", "github-pull-requests", "github-actions", "github-repo-governance",
+        "devops-ci-cd", "release-management", "release-readiness",
+        "containers-kubernetes", "infrastructure-as-code", "observability-monitoring", "incident-response",
+        "supply-chain-security", "codebase-analysis"
+      ],
+      "agents": ["architect", "code-reviewer", "security-reviewer"]
+    },
+    {
+      "name": "anthropica-infrastructure",
+      "title": "Infrastructure",
+      "role": "Infrastructure, cloud and site reliability engineers",
+      "description": "Infrastructure as code, Kubernetes, observability, incident response, architecture and GitHub workflow standards.",
+      "category": "development",
+      "skills": [
+        "infrastructure-as-code", "containers-kubernetes", "observability-monitoring", "incident-response",
+        "architecture-design", "performance-investigation", "database-engineering",
+        "github-commits", "github-pull-requests", "github-actions", "github-repo-governance",
+        "security-review", "threat-modeling"
+      ],
+      "agents": ["architect", "code-reviewer", "security-reviewer"]
+    },
+    {
+      "name": "anthropica-engineering",
+      "title": "Software engineering",
+      "role": "Backend, frontend and full-stack developers",
+      "description": "Codebase analysis, backend, frontend, database, testing and GitHub workflow standards.",
+      "category": "development",
+      "skills": [
+        "codebase-analysis", "architecture-design", "project-bootstrap",
+        "backend-development", "frontend-development", "database-engineering",
+        "testing-validation", "performance-investigation", "security-review",
+        "github-commits", "github-pull-requests"
+      ],
+      "agents": ["architect", "code-reviewer", "test-engineer"]
+    },
+    {
+      "name": "anthropica-design",
+      "title": "Design",
+      "role": "Product, UX and UI designers",
+      "description": "UI/UX and accessibility reviews, design systems and design-to-code handoff.",
+      "category": "design",
+      "skills": ["ui-ux-review", "design-system", "frontend-development"],
+      "agents": []
+    },
+    {
+      "name": "anthropica-marketing",
+      "title": "Marketing",
+      "role": "Marketing, content and growth teams",
+      "description": "On-brand marketing copy, campaign planning and measurement, and search-friendly content.",
+      "category": "productivity",
+      "skills": ["marketing-copy", "campaign-planning", "seo-content"],
+      "agents": []
+    },
+    {
+      "name": "anthropica-seo",
+      "title": "SEO",
+      "role": "SEO specialists and web content teams",
+      "description": "Technical SEO audits, content briefs and on-page optimisation, and Core Web Vitals investigation.",
+      "category": "productivity",
+      "skills": ["seo-audit", "seo-content", "performance-investigation", "frontend-development"],
+      "agents": []
+    },
+    {
+      "name": "anthropica-qa",
+      "title": "Quality assurance",
+      "role": "QA engineers and testers",
+      "description": "Risk-based test plans, test cases, bug reports, automated testing and release readiness.",
+      "category": "development",
+      "skills": [
+        "test-planning", "testing-validation", "release-readiness", "performance-investigation",
+        "codebase-analysis", "ui-ux-review", "github-pull-requests"
+      ],
+      "agents": ["test-engineer", "code-reviewer"]
+    },
+    {
+      "name": "anthropica-security",
+      "title": "Security",
+      "role": "Application, cloud and product security teams",
+      "description": "Security reviews, threat modeling, supply-chain security, repository governance and incident response.",
+      "category": "security",
+      "skills": [
+        "security-review", "threat-modeling", "supply-chain-security", "github-repo-governance",
+        "github-actions", "incident-response", "infrastructure-as-code", "codebase-analysis"
+      ],
+      "agents": ["security-reviewer", "code-reviewer"]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "anthropica-design",
+  "displayName": "Anthropica Design",
+  "description": "UI/UX and accessibility reviews, design systems and design-to-code handoff.",
+  "version": "1.2.0",
+  "author": {
+    "name": "Jamal-GML",
+    "url": "https://github.com/jamal-gml"
+  },
+  "homepage": "https://github.com/jamal-gml/anthropica",
+  "repository": "https://github.com/jamal-gml/anthropica",
+  "license": "MIT",
+  "keywords": [
+    "design",
+    "skills"
+  ]
+}

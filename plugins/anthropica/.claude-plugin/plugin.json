@@ -1,13 +1,17 @@
 {
   "name": "anthropica",
   "displayName": "Anthropica",
-  "description": "Selective skills and specialist agents for lower context overhead, stronger engineering decisions, secure code and reliable delivery.",
-  "version": "1.1.0",
+  "description": "Every Anthropica skill and specialist agent in one plugin.",
+  "version": "1.2.0",
   "author": {
     "name": "Jamal-GML",
     "url": "https://github.com/jamal-gml"
   },
   "homepage": "https://github.com/jamal-gml/anthropica",
   "repository": "https://github.com/jamal-gml/anthropica",
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "full library",
+    "skills"
+  ]
 }

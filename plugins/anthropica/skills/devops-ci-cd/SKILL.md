@@ -1,6 +1,6 @@
 ---
 name: devops-ci-cd
-description: Create or troubleshoot CI pipelines, GitHub Actions, branch protections, release automation and infrastructure workflows. Use when editing workflow files, fixing a failing pipeline or setting up deployment gates.
+description: Design CI/CD pipelines and deployment flows (stages, environments, promotion gates, deployment strategies, release automation) on any CI platform. Use when planning or restructuring a pipeline or deployment process; for GitHub workflow files specifically, also use github-actions.
 ---
 
 # DevOps and CI/CD

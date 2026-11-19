@@ -1,0 +1,17 @@
+{
+  "name": "anthropica-security",
+  "displayName": "Anthropica Security",
+  "description": "Security reviews, threat modeling, supply-chain security, repository governance and incident response.",
+  "version": "1.2.0",
+  "author": {
+    "name": "Jamal-GML",
+    "url": "https://github.com/jamal-gml"
+  },
+  "homepage": "https://github.com/jamal-gml/anthropica",
+  "repository": "https://github.com/jamal-gml/anthropica",
+  "license": "MIT",
+  "keywords": [
+    "security",
+    "skills"
+  ]
+}
