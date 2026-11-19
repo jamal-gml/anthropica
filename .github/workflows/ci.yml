@@ -85,5 +85,6 @@ jobs:
           npm install -g --prefix "$prefix" --omit=optional --no-audit --no-fund \
             "$packs/anthropica-0.0.0-ci.tgz" "$packs/anthropica-$plat-0.0.0-ci.tgz"
           if [ "$RUNNER_OS" = Windows ]; then cmd="$prefix/anthropica.cmd"; else cmd="$prefix/bin/anthropica"; fi
-          "$cmd" version | tee /dev/stderr | grep -q "0.0.0-ci"
+          out="$("$cmd" version)"; echo "$out"
+          case "$out" in *0.0.0-ci*) ;; *) echo "::error::unexpected version output"; exit 1 ;; esac
           if "$cmd" bogus; then echo "::error::invalid command should fail"; exit 1; fi
