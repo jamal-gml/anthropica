@@ -2,3 +2,7 @@ __pycache__/
 *.py[cod]
 .DS_Store
 dist/packs/
+cli/anthropica
+cli/anthropica.exe
+cli/dist/
+cli/build/

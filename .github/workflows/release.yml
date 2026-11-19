@@ -39,6 +39,36 @@ jobs:
             echo "::error::Generated files on this tag are out of date."
             exit 1
           fi
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
+        with:
+          go-version-file: cli/go.mod
+          cache-dependency-path: cli/go.sum
+      - name: Build CLI binaries
+        working-directory: cli
+        env:
+          TAG: ${{ github.ref_name }}
+          CGO_ENABLED: '0'
+        run: |
+          set -euo pipefail
+          go test ./...
+          out="$GITHUB_WORKSPACE/dist/cli"
+          mkdir -p "$out"
+          ldflags="-s -w -X github.com/jamal-gml/anthropica/cli/internal/cli.version=${TAG#v}"
+          for target in windows/amd64 windows/arm64 darwin/amd64 darwin/arm64 linux/amd64 linux/arm64; do
+            os="${target%/*}"; arch="${target#*/}"
+            # Version-free names keep releases/latest/download/<file> links stable.
+            name="anthropica_${os}_${arch}"
+            bin="anthropica"; [ "$os" = windows ] && bin="anthropica.exe"
+            mkdir -p "build/$name"
+            GOOS="$os" GOARCH="$arch" go build -trimpath -ldflags "$ldflags" -o "build/$name/$bin" .
+            cp README.md ../LICENSE "build/$name/"
+            if [ "$os" = windows ]; then
+              (cd build && zip -qr "$out/$name.zip" "$name")
+            else
+              tar -czf "$out/$name.tar.gz" -C build "$name"
+            fi
+          done
+          (cd "$out" && sha256sum * > checksums.txt)
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -48,4 +78,12 @@ jobs:
             --title "$TAG" \
             --generate-notes \
             --verify-tag \
-            dist/packs/*.zip dist/claude-ai-skills/*.zip
+            dist/packs/*.zip dist/claude-ai-skills/*.zip dist/cli/*
+      - name: Tag CLI module for go install
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          # Go resolves github.com/jamal-gml/anthropica/cli@latest from cli/vX.Y.Z tags.
+          gh api "repos/${GITHUB_REPOSITORY}/git/refs" -f ref="refs/tags/cli/${TAG}" -f sha="${GITHUB_SHA}" >/dev/null
+          echo "Created tag cli/${TAG}"

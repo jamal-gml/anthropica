@@ -7,10 +7,9 @@ currently being supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| 1.0.0   | :skills_and_instructions: |
+| 1.1.0   | :role_based_skill_pack: |
+| 1.2.0   | :cli: |
 
 ## Reporting a Vulnerability
 
