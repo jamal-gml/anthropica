@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "Anthropica",
+  "owner": {
+    "name": "Jamal-GML",
+    "url": "https://github.com/jamal-gml"
+  },
+  "metadata": {
+    "description": "Selective Claude optimisation, software engineering and quality workflows."
+  },
+  "plugins": [
+    {
+      "name": "Anthropica",
+      "source": "./plugins/anthropica",
+      "description": "Reusable Claude skills and specialist agents for token efficiency and engineering quality.",
+      "version": "1.0.0",
+      "category": "development"
+    }
+  ]
+}
