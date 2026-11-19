@@ -1,0 +1,17 @@
+{
+  "name": "anthropica-devops",
+  "displayName": "Anthropica DevOps",
+  "description": "GitHub commits, PRs, Actions and governance, CI/CD, releases, containers, observability and incident response.",
+  "version": "1.2.0",
+  "author": {
+    "name": "Jamal-GML",
+    "url": "https://github.com/jamal-gml"
+  },
+  "homepage": "https://github.com/jamal-gml/anthropica",
+  "repository": "https://github.com/jamal-gml/anthropica",
+  "license": "MIT",
+  "keywords": [
+    "devops",
+    "skills"
+  ]
+}

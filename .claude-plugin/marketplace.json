@@ -6,15 +6,72 @@
     "url": "https://github.com/jamal-gml"
   },
   "metadata": {
-    "description": "Selective Claude optimisation, software engineering and quality workflows."
+    "description": "Role-based Claude skill packs for engineering, DevOps, infrastructure, design, marketing, SEO, QA and security teams.",
+    "version": "1.2.0"
   },
   "plugins": [
     {
       "name": "anthropica",
       "source": "./plugins/anthropica",
-      "description": "Reusable Claude skills and specialist agents for token efficiency and engineering quality.",
-      "version": "1.1.0",
+      "description": "Every Anthropica skill and specialist agent in one plugin.",
+      "version": "1.2.0",
       "category": "development"
+    },
+    {
+      "name": "anthropica-devops",
+      "source": "./plugins/anthropica-devops",
+      "description": "GitHub commits, PRs, Actions and governance, CI/CD, releases, containers, observability and incident response.",
+      "version": "1.2.0",
+      "category": "development"
+    },
+    {
+      "name": "anthropica-infrastructure",
+      "source": "./plugins/anthropica-infrastructure",
+      "description": "Infrastructure as code, Kubernetes, observability, incident response, architecture and GitHub workflow standards.",
+      "version": "1.2.0",
+      "category": "development"
+    },
+    {
+      "name": "anthropica-engineering",
+      "source": "./plugins/anthropica-engineering",
+      "description": "Codebase analysis, backend, frontend, database, testing and GitHub workflow standards.",
+      "version": "1.2.0",
+      "category": "development"
+    },
+    {
+      "name": "anthropica-design",
+      "source": "./plugins/anthropica-design",
+      "description": "UI/UX and accessibility reviews, design systems and design-to-code handoff.",
+      "version": "1.2.0",
+      "category": "design"
+    },
+    {
+      "name": "anthropica-marketing",
+      "source": "./plugins/anthropica-marketing",
+      "description": "On-brand marketing copy, campaign planning and measurement, and search-friendly content.",
+      "version": "1.2.0",
+      "category": "productivity"
+    },
+    {
+      "name": "anthropica-seo",
+      "source": "./plugins/anthropica-seo",
+      "description": "Technical SEO audits, content briefs and on-page optimisation, and Core Web Vitals investigation.",
+      "version": "1.2.0",
+      "category": "productivity"
+    },
+    {
+      "name": "anthropica-qa",
+      "source": "./plugins/anthropica-qa",
+      "description": "Risk-based test plans, test cases, bug reports, automated testing and release readiness.",
+      "version": "1.2.0",
+      "category": "development"
+    },
+    {
+      "name": "anthropica-security",
+      "source": "./plugins/anthropica-security",
+      "description": "Security reviews, threat modeling, supply-chain security, repository governance and incident response.",
+      "version": "1.2.0",
+      "category": "security"
     }
   ]
 }
