@@ -14,29 +14,29 @@ A reusable Claude plugin and skill library for Claude Code, Claude Desktop, Clau
 ## What is included
 
 - A Claude Code plugin marketplace (`.claude-plugin/marketplace.json`).
-- A versioned plugin with 14 manually invoked Skills and four specialist agents.
+- A versioned plugin with 14 Skills and four specialist agents.
 - A small optional global `CLAUDE.md` for Claude Code users who want baseline behaviour across projects.
 - Individually packaged Skills for upload to Claude.ai.
 - No default MCP servers, hooks, background processes or external service connections.
 
 ## Install in Claude Code (available across projects)
 
-Run in a terminal:
+Run inside Claude Code:
 
-```bash
-/plugin marketplace add jamal-gml/anthropic-claude-optimization
-/plugin install claude-optimisation@jamal-claude-toolkit
+```text
+/plugin marketplace add jamal-gml/anthropica
+/plugin install anthropica@anthropica
 ```
 
 Choose **User** scope when prompted to make it available across your projects. If prompted, run `/reload-plugins`.
 
-To use a workflow, invoke it explicitly, for example:
+Claude loads a skill automatically when a task matches its description. You can also invoke one explicitly, for example:
 
 ```text
-/claude-optimisation:token-efficiency
-/claude-optimisation:project-bootstrap
-/claude-optimisation:security-review
-/claude-optimisation:codebase-analysis
+/anthropica:token-efficiency
+/anthropica:project-bootstrap
+/anthropica:security-review
+/anthropica:codebase-analysis
 ```
 
 To list skills, use `/skills`. To disable or uninstall the plugin, use `/plugin`.
@@ -53,7 +53,9 @@ Copy `global/CLAUDE.md` to `~/.claude/CLAUDE.md` if you want concise baseline in
 
 ## Selective design
 
-All plugin skills set `disable-model-invocation: true`. Claude will not decide to load a workflow automatically; the user invokes it with its slash command. This makes activation deliberate and predictable. For Claude.ai, individual skills can be toggled separately.
+Only each skill's one-line description sits in context; the full instructions load when a task matches it or when you invoke it with its slash command. Each description states when the skill applies, so Claude picks the right one without loading the others. To make a skill manual-only, add `disable-model-invocation: true` to its frontmatter. For Claude.ai, individual skills can be toggled separately.
+
+The agents are delegated to for bounded work. `architect`, `code-reviewer` and `security-reviewer` are limited to read-only tools; `test-engineer` can write tests.
 
 ## Updating
 
@@ -67,9 +69,9 @@ The initial release contains no MCP configuration, hooks or auto-running scripts
 
 ```text
 .claude-plugin/marketplace.json
-plugins/claude-optimisation/.claude-plugin/plugin.json
-plugins/claude-optimisation/skills/*/SKILL.md
-plugins/claude-optimisation/agents/*.md
+plugins/anthropica/.claude-plugin/plugin.json
+plugins/anthropica/skills/*/SKILL.md
+plugins/anthropica/agents/*.md
 global/CLAUDE.md
 scripts/package-skills.py
 dist/claude-ai-skills/*.zip

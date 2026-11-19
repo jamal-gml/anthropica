@@ -5,7 +5,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILLS = ROOT / "plugins" / "claude-optimisation" / "skills"
+SKILLS = ROOT / "plugins" / "anthropica" / "skills"
 OUT = ROOT / "dist" / "claude-ai-skills"
 OUT.mkdir(parents=True, exist_ok=True)
 for skill_dir in sorted(p for p in SKILLS.iterdir() if p.is_dir()):
