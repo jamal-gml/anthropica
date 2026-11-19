@@ -6,3 +6,4 @@ cli/anthropica
 cli/anthropica.exe
 cli/dist/
 cli/build/
+npm/dist/
