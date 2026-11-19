@@ -94,6 +94,7 @@ def zip_bytes(files: dict[str, bytes]) -> bytes:
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_STORED) as zf:
         for name in sorted(files):
             info = zipfile.ZipInfo(name, date_time=ZIP_DATE)
+            info.create_system = 3  # Unix; the default depends on the host OS and breaks reproducibility
             info.external_attr = 0o644 << 16
             zf.writestr(info, files[name])
     return buf.getvalue()
