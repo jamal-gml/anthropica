@@ -6,3 +6,9 @@ updates:
       interval: weekly
     commit-message:
       prefix: ci(deps)
+  - package-ecosystem: gomod
+    directory: /cli
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build(deps)

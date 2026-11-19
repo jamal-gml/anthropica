@@ -59,6 +59,20 @@ Add the marketplace and the team's pack to the repository's `.claude/settings.js
 
 Download the pack you need from the [latest release](https://github.com/jamal-gml/anthropica/releases/latest) (`<pack>-claude-ai.zip`), unzip it, and upload each skill ZIP through **Customize → Skills → Upload a skill**. Single skills are also in `dist/claude-ai-skills/`. Organisation owners can provision skills for everyone.
 
+## Command-line tool
+
+The `anthropica` CLI prepares any project for AI coding assistants and lists skills and packs. It is provider-neutral: `init` writes `AGENTS.md`, plus `CLAUDE.md` with `--assistant claude` or `all`, and never overwrites existing files.
+
+```powershell
+anthropica doctor
+anthropica analyse --path .
+anthropica init --path . --assistant all
+anthropica skills list --pack anthropica-devops
+anthropica github inspect your-org/your-repo
+```
+
+Download a binary for Windows, macOS or Linux from the [latest release](https://github.com/jamal-gml/anthropica/releases/latest), or build it from `cli/`. See [cli/README.md](cli/README.md).
+
 ## Agents
 
 | Agent | Tools | Use |
@@ -97,9 +111,10 @@ skills/<name>/SKILL.md        source of every skill
 agents/<name>.md              source of every agent
 packs.json                    role packs, version, marketplace metadata
 scripts/build.py              generates everything below
+cli/                          anthropica command-line tool (Go)
 plugins/<pack>/               generated Claude Code plugins
 .claude-plugin/marketplace.json
 dist/claude-ai-skills/*.zip   generated portable skill ZIPs
 global/CLAUDE.md              optional personal baseline
-.github/workflows/            CI check and tag-driven release
+.github/workflows/            CI checks and tag-driven release (packs and CLI binaries)
 ```
