@@ -12,14 +12,17 @@ For: Marketing, content and growth teams. On-brand marketing copy, campaign plan
 ```
 
 Claude loads a skill automatically when a task matches its description. Invoke one directly with its slash command.
+Skills are named `<phase>-<topic>`. Start with `/anthropica-marketing:workflow` to see the phases and get a suggested next skill;
+each skill also ends with a pointer to the next phase.
 
 ## Skills
 
-| Command | Use it for |
-|---|---|
-| `/anthropica-marketing:marketing-copy` | Write and edit marketing copy (landing pages, emails, ads, social posts, product announcements) that is on-brand, audience-specific, accurate and conversion-focused. Use when drafting or improving any customer-facing marketing text. |
-| `/anthropica-marketing:campaign-planning` | Plan marketing campaigns and launches end to end (objective, audience, positioning, channels, content calendar, budget, tracking and measurement). Use when planning a product launch, a campaign, a content calendar, or when defining KPIs and attribution for marketing work. |
-| `/anthropica-marketing:seo-content` | Plan and optimise content for search (keyword and intent research, content briefs, on-page optimisation, internal linking, refreshing decaying pages) while writing for people first. Use when creating a content brief, optimising an article or landing page, or planning topic clusters. |
-| `/anthropica-marketing:token-efficiency` | Reduce unnecessary Claude context and output while preserving correctness. Use when planning a Claude session, reducing token use, managing context, splitting work, or improving prompt efficiency. |
-| `/anthropica-marketing:prompt-engineering` | Create precise prompts and task specifications for Claude and coding agents. Use when a task is ambiguous, complex, multi-stage, or needs clear acceptance criteria and bounded scope. |
-| `/anthropica-marketing:technical-documentation` | Write or update concise technical documentation, setup guides, architecture notes and operational runbooks. Use when writing READMEs, setup guides, architecture notes or runbooks. |
+| Phase | Command | Use it for |
+|---|---|---|
+| Any | `/anthropica-marketing:workflow` | Phase map of this pack and advice on which skill to use next. |
+| Plan | `/anthropica-marketing:plan-campaign` | Plan marketing campaigns and launches - objective and KPI tree, segments, message house, channel mix by funnel stage, budget and pacing, timeline, UTMs, measurement, experiments and post-campaign review. Use when planning a launch, campaign, content calendar or media budget, or defining KPIs, attribution or A/B tests for marketing. Not for writing the copy (use `create-marketing-copy`). |
+| Create | `/anthropica-marketing:create-marketing-copy` | Write and edit conversion-focused marketing copy (landing pages, emails, ads, social, announcements, push/SMS) that is on-brand, accurate, accessible and testable. Use when drafting, rewriting or A/B-testing customer-facing marketing text, headlines, subject lines or CTAs. Not for search-led articles (use `create-seo-content`) or campaign strategy (use `plan-campaign`). |
+| Create | `/anthropica-marketing:create-seo-content` | Plan, write and optimise search-led content - intent, SERP analysis, keyword clusters, briefs, E-E-A-T, on-page and schema, refreshing or pruning pages. Use when writing a content brief, article, comparison or landing page for search, planning topic clusters, or fixing cannibalisation or decaying pages. Not for technical audits (use `review-seo`) or ad/email copy (use `create-marketing-copy`). |
+| Any phase | `/anthropica-marketing:core-documentation` | Write or update docs verified against the repo (README, setup and how-to guides, tutorials, reference, explanations, runbooks) using Diataxis and docs-as-code checks. Use when writing or fixing a README, CONTRIBUTING, setup guide, config reference or runbook, or when a change makes docs stale. Not for ADRs (use `plan-architecture`), changelogs (use `ship-release`) or postmortems (use `operate-incident`). |
+| Any phase | `/anthropica-marketing:core-prompt-engineering` | Write and debug prompts, system prompts and task specs for Claude, coding agents and subagents (goal, context, constraints, output contract, XML, examples, reasoning) and test them. Use when a task is ambiguous or multi-stage, briefing a subagent or coding agent, writing a system prompt, skill or CLAUDE.md rule, or when a prompt gives inconsistent or wrong output. |
+| Any phase | `/anthropica-marketing:core-token-efficiency` | Keep Claude Code sessions lean without losing correctness - what loads always vs on use, targeted search and reads, bounded output, subagent fan-out, /compact, /clear, handover notes. Use when planning a long session, context is filling or auto-compacting, output is noisy, deciding whether to delegate, or trimming CLAUDE.md, skills or MCP setup. |

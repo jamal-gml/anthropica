@@ -12,14 +12,17 @@ For: Product, UX and UI designers. UI/UX and accessibility reviews, design syste
 ```
 
 Claude loads a skill automatically when a task matches its description. Invoke one directly with its slash command.
+Skills are named `<phase>-<topic>`. Start with `/anthropica-design:workflow` to see the phases and get a suggested next skill;
+each skill also ends with a pointer to the next phase.
 
 ## Skills
 
-| Command | Use it for |
-|---|---|
-| `/anthropica-design:ui-ux-review` | Review screens, flows, mockups or built UI for usability, accessibility (WCAG 2.2 AA), visual consistency and content clarity, with prioritised, actionable findings. Use when critiquing a design, checking a page before launch, or auditing accessibility. |
-| `/anthropica-design:design-system` | Create, extend or audit a design system (design tokens, component APIs, variants and states, documentation, design-to-code parity). Use when defining tokens or components, adding a variant, documenting usage, or finding inconsistencies between design files and code. |
-| `/anthropica-design:frontend-development` | Implement or modify frontend UI, components, state, accessibility and responsive behaviour using the existing project conventions. Use when building or changing UI components, pages or client-side state. |
-| `/anthropica-design:token-efficiency` | Reduce unnecessary Claude context and output while preserving correctness. Use when planning a Claude session, reducing token use, managing context, splitting work, or improving prompt efficiency. |
-| `/anthropica-design:prompt-engineering` | Create precise prompts and task specifications for Claude and coding agents. Use when a task is ambiguous, complex, multi-stage, or needs clear acceptance criteria and bounded scope. |
-| `/anthropica-design:technical-documentation` | Write or update concise technical documentation, setup guides, architecture notes and operational runbooks. Use when writing READMEs, setup guides, architecture notes or runbooks. |
+| Phase | Command | Use it for |
+|---|---|---|
+| Any | `/anthropica-design:workflow` | Phase map of this pack and advice on which skill to use next. |
+| Build | `/anthropica-design:build-design-system` | Create, extend or audit a design system - tokens (tiers, W3C format, theming, dark mode), accessible component APIs, stories per state, visual regression, versioning, deprecation and design-to-code handoff. Use when defining tokens, adding a component or variant, theming, or finding design/code drift. Not for reviewing finished screens (use `review-ui-ux`) or feature UI (use `build-frontend`). |
+| Build | `/anthropica-design:build-frontend` | Build or change frontend UI to production standard (components, state ownership, data fetching, forms, accessibility, Core Web Vitals, XSS-safe rendering, token storage, Testing Library tests, i18n). Use when building or changing components, pages, routes, forms, client-side state or data fetching. Not for design tokens (use `build-design-system`) or UX audits (use `review-ui-ux`). |
+| Review | `/anthropica-design:review-ui-ux` | Review screens, flows, mockups or built UI for usability, WCAG 2.2 AA accessibility, UI states, microcopy, responsive layout and consistency, with severity-rated findings. Use when critiquing a design, checking a page before launch, or auditing accessibility (axe, Lighthouse, keyboard, screen reader). Not for building components (use `build-design-system`) or code review (use `review-pull-request`). |
+| Any phase | `/anthropica-design:core-documentation` | Write or update docs verified against the repo (README, setup and how-to guides, tutorials, reference, explanations, runbooks) using Diataxis and docs-as-code checks. Use when writing or fixing a README, CONTRIBUTING, setup guide, config reference or runbook, or when a change makes docs stale. Not for ADRs (use `plan-architecture`), changelogs (use `ship-release`) or postmortems (use `operate-incident`). |
+| Any phase | `/anthropica-design:core-prompt-engineering` | Write and debug prompts, system prompts and task specs for Claude, coding agents and subagents (goal, context, constraints, output contract, XML, examples, reasoning) and test them. Use when a task is ambiguous or multi-stage, briefing a subagent or coding agent, writing a system prompt, skill or CLAUDE.md rule, or when a prompt gives inconsistent or wrong output. |
+| Any phase | `/anthropica-design:core-token-efficiency` | Keep Claude Code sessions lean without losing correctness - what loads always vs on use, targeted search and reads, bounded output, subagent fan-out, /compact, /clear, handover notes. Use when planning a long session, context is filling or auto-compacting, output is noisy, deciding whether to delegate, or trimming CLAUDE.md, skills or MCP setup. |

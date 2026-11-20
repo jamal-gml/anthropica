@@ -30,6 +30,7 @@ PLUGINS = ROOT / "plugins"
 DIST = ROOT / "dist"
 NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 ZIP_DATE = (1980, 1, 1, 0, 0, 0)
+WORKFLOW = "workflow"  # generated per pack; reserved as a skill name
 
 errors: list[str] = []
 
@@ -100,11 +101,98 @@ def zip_bytes(files: dict[str, bytes]) -> bytes:
     return buf.getvalue()
 
 
-def portable_skill(name: str) -> bytes:
-    text = read(SKILLS / name / "SKILL.md")
-    # disable-model-invocation is a Claude Code extension, not portable Agent Skills metadata.
-    text = re.sub(r"^disable-model-invocation:.*\n", "", text, flags=re.M)
-    return text.encode("utf-8")
+def phase_of(skill: str) -> str:
+    return skill.split("-", 1)[0]
+
+
+def by_phase(skills: list[str], phases: list[dict]) -> list[str]:
+    rank = {p["name"]: i for i, p in enumerate(phases)}
+    return sorted(skills, key=lambda s: (rank[phase_of(s)], s))
+
+
+def summary(description: str) -> str:
+    """The 'what it does' half of a description, without the 'Use when ...' trigger."""
+    return re.split(r"\s+Use (?:when|before|after|for)\b", description, maxsplit=1)[0].strip()
+
+
+def footer(skill: str, pack_skills: list[str], phases: list[dict], prefix: str) -> str:
+    """Pack-aware hint appended to every skill: its phase and the skills of the next phase."""
+    cmd = lambda s: f"`{prefix}{s}`"
+    titles = {p["name"]: p["title"] for p in phases}
+    phase = phase_of(skill)
+    if phase == "core":
+        line = f"**Phase:** any. For the phase map and what to do next, use {cmd(WORKFLOW)}."
+    else:
+        present = [p["name"] for p in phases if p["name"] != "core" and any(phase_of(s) == p["name"] for s in pack_skills)]
+        i = present.index(phase)
+        nxt = present[(i + 1) % len(present)]
+        nexts = ", ".join(cmd(s) for s in by_phase([s for s in pack_skills if phase_of(s) == nxt], phases))
+        when = "when this step is done, offer" if i + 1 < len(present) else "last phase; feed findings back into"
+        line = f"**Phase:** {titles[phase]}. **Next:** {when} {titles[nxt]}: {nexts}. Phase map: {cmd(WORKFLOW)}."
+    return f"\n---\n\n{line}\n"
+
+
+def workflow_skill(title: str, pack_skills: list[str], all_skills: dict, phases: list[dict], prefix: str) -> str:
+    """Generated per pack: the pack's skills grouped by phase, and how to choose the next one."""
+    ordered = by_phase(pack_skills, phases)
+    titles = {p["name"]: p["title"] for p in phases}
+    present = [p for p in phases if any(phase_of(s) == p["name"] for s in ordered)]
+    flow = " > ".join(p["title"] for p in present if p["name"] != "core")
+    lines = [
+        "---",
+        f"name: {WORKFLOW}",
+        f"description: Phase map of the {title} skills ({flow}) and advice on which skill to use next. "
+        "Use when starting a task, when unsure which skill applies, or after finishing a step to pick the next one.",
+        "---",
+        "",
+        f"# {title} workflow",
+        "",
+        "Phases run in this order. Skip phases that do not apply; loop back when a later phase finds a problem.",
+    ]
+    for p in present:
+        lines += ["", f"**{p['title']}**: {p['when']}"]
+        lines += [f"- `{prefix}{s}`: {summary(all_skills[s]['description'])}" for s in ordered if phase_of(s) == p["name"]]
+    lines += [
+        "",
+        "## Choosing the next skill",
+        "1. Place the work in a phase from the request and the repository state: no agreed approach yet is Plan; "
+        "uncommitted or unreviewed changes are Build, Test or Review; a merged but unreleased change is Ship; "
+        "a production problem is Operate.",
+        "2. Recommend one skill and say why in one line. Name the one after it.",
+        "3. Use it once the user agrees, or straight away if they already asked you to proceed.",
+        "4. If no skill here fits, say so rather than stretching one.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def skill_files(name: str, extra: str, portable: bool) -> dict[str, bytes]:
+    """Every file in a skill folder; SKILL.md gets the pack footer appended."""
+    files = {}
+    for path in sorted((SKILLS / name).rglob("*")):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(SKILLS / name).as_posix()
+        if rel == "SKILL.md":
+            text = read(path).rstrip("\n") + "\n" + extra
+            if portable:
+                # disable-model-invocation is a Claude Code extension, not portable Agent Skills metadata.
+                text = re.sub(r"^disable-model-invocation:.*\n", "", text, flags=re.M)
+            files[rel] = text.encode("utf-8")
+        else:
+            files[rel] = path.read_bytes()
+    return files
+
+
+def portable_pack(pack_skills: list[str], all_skills: dict, phases: list[dict], title: str) -> dict[str, bytes]:
+    """Claude.ai skill ZIPs for one pack, keyed by ZIP name, footers scoped to that pack."""
+    zips = {}
+    for s in pack_skills:
+        files = skill_files(s, footer(s, pack_skills, phases, ""), portable=True)
+        zips[s] = zip_bytes({f"{s}/{rel}": data for rel, data in files.items()})
+    wf = workflow_skill(title, pack_skills, all_skills, phases, "").encode("utf-8")
+    zips[WORKFLOW] = zip_bytes({f"{WORKFLOW}/SKILL.md": wf})
+    return zips
 
 
 def pack_readme(pack: dict, skills: list[str], agents: list[str], all_skills: dict, all_agents: dict, cfg: dict) -> str:
@@ -125,14 +213,18 @@ def pack_readme(pack: dict, skills: list[str], agents: list[str], all_skills: di
         "```",
         "",
         "Claude loads a skill automatically when a task matches its description. Invoke one directly with its slash command.",
+        f"Skills are named `<phase>-<topic>`. Start with `/{name}:{WORKFLOW}` to see the phases and get a suggested next skill;",
+        "each skill also ends with a pointer to the next phase.",
         "",
         "## Skills",
         "",
-        "| Command | Use it for |",
-        "|---|---|",
+        "| Phase | Command | Use it for |",
+        "|---|---|---|",
+        f"| Any | `/{name}:{WORKFLOW}` | Phase map of this pack and advice on which skill to use next. |",
     ]
-    for s in skills:
-        lines.append(f"| `/{name}:{s}` | {all_skills[s]['description'].replace('|', '/')} |")
+    titles = {p["name"]: p["title"] for p in cfg["phases"]}
+    for s in by_phase(skills, cfg["phases"]):
+        lines.append(f"| {titles[phase_of(s)]} | `/{name}:{s}` | {all_skills[s]['description'].replace('|', '/')} |")
     if agents:
         lines += ["", "## Agents", "", "| Agent | Role |", "|---|---|"]
         for a in agents:
@@ -159,6 +251,16 @@ def main() -> int:
     skills = load_items(SKILLS, "skill")
     agents = load_items(AGENTS, "agent")
     core = cfg.get("core", [])
+    phases = cfg["phases"]
+    phase_names = [p["name"] for p in phases]
+    if WORKFLOW in skills:
+        errors.append(f"skills/{WORKFLOW}: the name is reserved for the generated phase map")
+    for s in skills:
+        if phase_of(s) not in phase_names:
+            errors.append(f"skills/{s}: name must start with a phase ({', '.join(phase_names)})")
+    for s in core:
+        if phase_of(s) != "core":
+            errors.append(f"packs.json: core skill '{s}' must be named core-<topic>")
 
     resolved = {}
     for pack in cfg["packs"]:
@@ -194,8 +296,14 @@ def main() -> int:
             "keywords": [pack["title"].lower(), "skills"],
         }
         write(base / ".claude-plugin" / "plugin.json", json.dumps(manifest, indent=2) + "\n")
+        prefix = f"/{name}:"
         for s in pack_skills:
-            write(base / "skills" / s / "SKILL.md", read(SKILLS / s / "SKILL.md"))
+            for rel, data in skill_files(s, footer(s, pack_skills, phases, prefix), portable=False).items():
+                path = base / "skills" / s / rel
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(data)
+        title = "Anthropica" if name == cfg["marketplace"]["name"] else f"Anthropica {pack['title']}"
+        write(base / "skills" / WORKFLOW / "SKILL.md", workflow_skill(title, pack_skills, skills, phases, prefix))
         for a in pack_agents:
             write(base / "agents" / f"{a}.md", read(AGENTS / f"{a}.md"))
         write(base / "README.md", pack_readme(pack, pack_skills, pack_agents, skills, agents, cfg))
@@ -217,13 +325,12 @@ def main() -> int:
     }
     write(ROOT / ".claude-plugin" / "marketplace.json", json.dumps(marketplace, indent=2) + "\n")
 
+    # Single skill ZIPs carry footers for the full library; pack ZIPs carry footers scoped to their pack.
     out = DIST / "claude-ai-skills"
     out.mkdir(parents=True, exist_ok=True)
-    skill_zips = {}
-    for s in sorted(skills):
-        data = zip_bytes({f"{s}/SKILL.md": portable_skill(s)})
+    skill_zips = portable_pack(sorted(skills), skills, phases, "Anthropica")
+    for s, data in skill_zips.items():
         (out / f"{s}.zip").write_bytes(data)
-        skill_zips[s] = data
     print(f"dist    {len(skill_zips)} skill ZIPs")
 
     if "--packs" in sys.argv:
@@ -231,7 +338,8 @@ def main() -> int:
         shutil.rmtree(packs_out, ignore_errors=True)
         packs_out.mkdir(parents=True)
         for pack in cfg["packs"]:
-            files = {f"{s}.zip": skill_zips[s] for s in resolved[pack["name"]][0]}
+            zips = portable_pack(resolved[pack["name"]][0], skills, phases, f"Anthropica {pack['title']}")
+            files = {f"{s}.zip": data for s, data in zips.items()}
             (packs_out / f"{pack['name']}-claude-ai.zip").write_bytes(zip_bytes(files))
         print(f"dist    {len(cfg['packs'])} pack ZIPs in dist/packs")
 
