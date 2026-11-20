@@ -37,6 +37,7 @@ Run inside Claude Code:
 /plugin marketplace add jamal-gml/anthropica
 /plugin install anthropica-devops@anthropica
 ```
+<img width="1462" height="486" alt="image" src="https://github.com/user-attachments/assets/19ada242-ef1e-4c44-b02b-33221bb32f14" />
 
 Replace `anthropica-devops` with your pack from the table. Choose **User** scope to use it across all your projects, or **Project** scope to share it with a team through the repository's `.claude/settings.json`. Run `/reload-plugins` if prompted. Install more than one pack if your work spans roles.
 
