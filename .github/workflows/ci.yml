@@ -65,3 +65,26 @@ jobs:
       - run: go build -o anthropica-ci .
       - name: Smoke test
         run: ./anthropica-ci version && ./anthropica-ci skills list --repo .. | tail -1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: npm package smoke test
+        run: |
+          set -euo pipefail
+          case "$RUNNER_OS" in
+            Windows) plat=win32-x64; dir=anthropica_windows_amd64; exe=anthropica.exe ;;
+            Linux)   plat=linux-x64; dir=anthropica_linux_amd64;   exe=anthropica ;;
+          esac
+          bins="$RUNNER_TEMP/npm-bins"; packs="$RUNNER_TEMP/npm-packs"; prefix="$RUNNER_TEMP/npm-prefix"
+          mkdir -p "$bins/$dir" "$packs"
+          go build -ldflags "-X github.com/jamal-gml/anthropica/cli/internal/cli.version=0.0.0-ci" -o "$bins/$dir/$exe" .
+          node ../scripts/npm/build.mjs --version 0.0.0-ci --binaries "$bins" --platforms "$plat"
+          (cd ../npm/dist/anthropica && npm pack --pack-destination "$packs")
+          (cd "../npm/dist/anthropica-$plat" && npm pack --pack-destination "$packs")
+          # --omit=optional: the CI-only version is not on the registry; the platform tarball is installed explicitly.
+          npm install -g --prefix "$prefix" --omit=optional --no-audit --no-fund \
+            "$packs/anthropica-0.0.0-ci.tgz" "$packs/anthropica-$plat-0.0.0-ci.tgz"
+          if [ "$RUNNER_OS" = Windows ]; then cmd="$prefix/anthropica.cmd"; else cmd="$prefix/bin/anthropica"; fi
+          out="$("$cmd" version)"; echo "$out"
+          case "$out" in *0.0.0-ci*) ;; *) echo "::error::unexpected version output"; exit 1 ;; esac
+          if "$cmd" bogus; then echo "::error::invalid command should fail"; exit 1; fi

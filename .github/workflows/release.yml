@@ -18,6 +18,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write
+      id-token: write # npm trusted publishing (OIDC) and provenance
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -87,3 +88,25 @@ jobs:
           # Go resolves github.com/jamal-gml/anthropica/cli@latest from cli/vX.Y.Z tags.
           gh api "repos/${GITHUB_REPOSITORY}/git/refs" -f ref="refs/tags/cli/${TAG}" -f sha="${GITHUB_SHA}" >/dev/null
           echo "Created tag cli/${TAG}"
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: Publish to npm
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          # Trusted publishing needs npm 11.5.1 or later; no NPM_TOKEN is used.
+          npm install -g npm@11.20.0
+          version="${TAG#v}"
+          node scripts/npm/build.mjs --version "$version" --binaries cli/build
+          # Platform packages first, so the launcher never points at missing versions.
+          for dir in npm/dist/anthropica-* npm/dist/anthropica; do
+            name="$(node -p "require('./$dir/package.json').name")"
+            if npm view "$name@$version" version >/dev/null 2>&1; then
+              echo "$name@$version already published; skipping"
+              continue
+            fi
+            (cd "$dir" && npm publish --access public --provenance)
+          done

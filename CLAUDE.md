@@ -36,7 +36,7 @@ Full checklist and recovery steps: `RELEASING.md`.
 1. Work on a branch (`feature/`, `fix/`, `docs/`, `chore/`), open a PR into `main`, and merge once CI is green. Do not push directly to `main`.
 2. In a release PR, bump `packs.json` version, rebuild, and merge.
 3. Tag the merge commit on `main`: `git tag -a vX.Y.Z -m "vX.Y.Z" && git push origin vX.Y.Z`. The tag must equal `v` + the `packs.json` version.
-4. The `release` workflow verifies the tag, rebuilds, tests and cross-compiles the CLI, and publishes a GitHub Release with each pack's `<pack>-claude-ai.zip`, every single-skill ZIP, and CLI archives for Windows, macOS and Linux (`anthropica_<os>_<arch>`, no version in the name) with `checksums.txt`, then tags `cli/vX.Y.Z` for `go install`.
+4. The `release` workflow verifies the tag, rebuilds, tests and cross-compiles the CLI, and publishes a GitHub Release with each pack's `<pack>-claude-ai.zip`, every single-skill ZIP, and CLI archives for Windows, macOS and Linux (`anthropica_<os>_<arch>`, no version in the name) with `checksums.txt`, tags `cli/vX.Y.Z` for `go install`, and publishes the npm packages (`anthropica` launcher in `npm/anthropica/`, assembled with the platform packages by `scripts/npm/build.mjs`) through npm trusted publishing.
 5. Users of the Claude Code marketplace get the update with `/plugin marketplace update anthropica`.
 
 Ask the repository owner before tagging, publishing a release, or changing repository settings.

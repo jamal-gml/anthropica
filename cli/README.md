@@ -4,6 +4,17 @@ A small, provider-neutral command-line tool for preparing projects for AI coding
 
 ## Install the CLI
 
+### npm (any OS, easiest)
+
+Requires Node.js 18 or later.
+
+```bat
+npm install -g anthropica@latest
+anthropica version
+```
+
+Or run it without installing: `npx anthropica@latest doctor`. npm installs a small launcher plus the prebuilt binary for your platform; there are no install scripts. Update with the same command; uninstall with `npm uninstall -g anthropica`.
+
 ### Windows (CMD)
 
 Downloads the latest release, verifies its checksum and adds it to your user `PATH`. Uses `curl`, `tar` and `certutil`, which ship with Windows 10 and 11.
