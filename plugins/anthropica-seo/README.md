@@ -12,15 +12,18 @@ For: SEO specialists and web content teams. Technical SEO audits, content briefs
 ```
 
 Claude loads a skill automatically when a task matches its description. Invoke one directly with its slash command.
+Skills are named `<phase>-<topic>`. Start with `/anthropica-seo:workflow` to see the phases and get a suggested next skill;
+each skill also ends with a pointer to the next phase.
 
 ## Skills
 
-| Command | Use it for |
-|---|---|
-| `/anthropica-seo:seo-audit` | Audit a website's technical SEO (crawlability, indexation, site architecture, Core Web Vitals, structured data, mobile, international) and produce prioritised fixes. Use when reviewing a site or template for search performance, before a migration or redesign, or when traffic drops. |
-| `/anthropica-seo:seo-content` | Plan and optimise content for search (keyword and intent research, content briefs, on-page optimisation, internal linking, refreshing decaying pages) while writing for people first. Use when creating a content brief, optimising an article or landing page, or planning topic clusters. |
-| `/anthropica-seo:performance-investigation` | Investigate measured performance, latency, memory, database or frontend bottlenecks without speculative optimisation. Use when something is slow or memory-heavy and the cause has not been measured yet. |
-| `/anthropica-seo:frontend-development` | Implement or modify frontend UI, components, state, accessibility and responsive behaviour using the existing project conventions. Use when building or changing UI components, pages or client-side state. |
-| `/anthropica-seo:token-efficiency` | Reduce unnecessary Claude context and output while preserving correctness. Use when planning a Claude session, reducing token use, managing context, splitting work, or improving prompt efficiency. |
-| `/anthropica-seo:prompt-engineering` | Create precise prompts and task specifications for Claude and coding agents. Use when a task is ambiguous, complex, multi-stage, or needs clear acceptance criteria and bounded scope. |
-| `/anthropica-seo:technical-documentation` | Write or update concise technical documentation, setup guides, architecture notes and operational runbooks. Use when writing READMEs, setup guides, architecture notes or runbooks. |
+| Phase | Command | Use it for |
+|---|---|---|
+| Any | `/anthropica-seo:workflow` | Phase map of this pack and advice on which skill to use next. |
+| Build | `/anthropica-seo:build-frontend` | Build or change frontend UI to production standard (components, state ownership, data fetching, forms, accessibility, Core Web Vitals, XSS-safe rendering, token storage, Testing Library tests, i18n). Use when building or changing components, pages, routes, forms, client-side state or data fetching. Not for design tokens (use `build-design-system`) or UX audits (use `review-ui-ux`). |
+| Create | `/anthropica-seo:create-seo-content` | Plan, write and optimise search-led content - intent, SERP analysis, keyword clusters, briefs, E-E-A-T, on-page and schema, refreshing or pruning pages. Use when writing a content brief, article, comparison or landing page for search, planning topic clusters, or fixing cannibalisation or decaying pages. Not for technical audits (use `review-seo`) or ad/email copy (use `create-marketing-copy`). |
+| Test | `/anthropica-seo:test-performance` | Measure and fix latency, throughput, memory, database and frontend performance with baselines, percentiles, profilers, EXPLAIN ANALYZE, Core Web Vitals and load tests (k6, Locust, JMeter), reporting before/after numbers. Use when something is slow, times out or uses too much CPU/memory, before a launch needs capacity numbers, or to add performance budgets to CI. Not for alert design (use `operate-observability`). |
+| Review | `/anthropica-seo:review-seo` | Audit technical SEO from evidence (headers, robots.txt, sitemaps, rendered HTML, crawl and search-console exports) - crawlability, indexation, canonicals, redirects, rendering, Core Web Vitals, structured data, hreflang, migrations. Use when reviewing a site or template, before/after a migration or redesign, or when organic traffic or indexing drops. Not for writing content (use `create-seo-content`). |
+| Any phase | `/anthropica-seo:core-documentation` | Write or update docs verified against the repo (README, setup and how-to guides, tutorials, reference, explanations, runbooks) using Diataxis and docs-as-code checks. Use when writing or fixing a README, CONTRIBUTING, setup guide, config reference or runbook, or when a change makes docs stale. Not for ADRs (use `plan-architecture`), changelogs (use `ship-release`) or postmortems (use `operate-incident`). |
+| Any phase | `/anthropica-seo:core-prompt-engineering` | Write and debug prompts, system prompts and task specs for Claude, coding agents and subagents (goal, context, constraints, output contract, XML, examples, reasoning) and test them. Use when a task is ambiguous or multi-stage, briefing a subagent or coding agent, writing a system prompt, skill or CLAUDE.md rule, or when a prompt gives inconsistent or wrong output. |
+| Any phase | `/anthropica-seo:core-token-efficiency` | Keep Claude Code sessions lean without losing correctness - what loads always vs on use, targeted search and reads, bounded output, subagent fan-out, /compact, /clear, handover notes. Use when planning a long session, context is filling or auto-compacting, output is noisy, deciding whether to delegate, or trimming CLAUDE.md, skills or MCP setup. |

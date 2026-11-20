@@ -8,7 +8,18 @@
   "author": { "name": "Jamal-GML", "url": "https://github.com/jamal-gml" },
   "repository": "https://github.com/jamal-gml/anthropica",
   "license": "MIT",
-  "core": ["token-efficiency", "prompt-engineering", "technical-documentation"],
+  "core": ["core-token-efficiency", "core-prompt-engineering", "core-documentation"],
+  "phases": [
+    { "name": "plan", "title": "Plan", "when": "Understand the code, requirements, risks and approach before changing anything." },
+    { "name": "build", "title": "Build", "when": "Write code, infrastructure and commits." },
+    { "name": "create", "title": "Create", "when": "Write content and copy." },
+    { "name": "test", "title": "Test", "when": "Prove the change works, including under load." },
+    { "name": "review", "title": "Review", "when": "Get the change or content reviewed before it merges or publishes." },
+    { "name": "secure", "title": "Secure", "when": "Check code, dependencies and repository settings for security gaps." },
+    { "name": "ship", "title": "Ship", "when": "Run pipelines, decide go/no-go and release." },
+    { "name": "operate", "title": "Operate", "when": "Monitor production and respond to incidents; feed what you learn back into Plan." },
+    { "name": "core", "title": "Any phase", "when": "Cross-cutting skills for documentation, prompts and token use." }
+  ],
   "packs": [
     {
       "name": "anthropica",
@@ -26,10 +37,10 @@
       "description": "GitHub commits, PRs, Actions and governance, CI/CD, releases, containers, observability and incident response.",
       "category": "development",
       "skills": [
-        "github-commits", "github-pull-requests", "github-actions", "github-repo-governance",
-        "devops-ci-cd", "release-management", "release-readiness",
-        "containers-kubernetes", "infrastructure-as-code", "observability-monitoring", "incident-response",
-        "supply-chain-security", "codebase-analysis"
+        "build-commits", "review-pull-request", "ship-github-actions", "secure-repo-governance",
+        "ship-ci-cd", "ship-release", "ship-readiness",
+        "build-containers", "build-iac", "operate-observability", "operate-incident",
+        "secure-supply-chain", "plan-codebase-analysis"
       ],
       "agents": ["architect", "code-reviewer", "security-reviewer"]
     },
@@ -40,10 +51,10 @@
       "description": "Infrastructure as code, Kubernetes, observability, incident response, architecture and GitHub workflow standards.",
       "category": "development",
       "skills": [
-        "infrastructure-as-code", "containers-kubernetes", "observability-monitoring", "incident-response",
-        "architecture-design", "performance-investigation", "database-engineering",
-        "github-commits", "github-pull-requests", "github-actions", "github-repo-governance",
-        "security-review", "threat-modeling"
+        "build-iac", "build-containers", "operate-observability", "operate-incident",
+        "plan-architecture", "test-performance", "build-database",
+        "build-commits", "review-pull-request", "ship-github-actions", "secure-repo-governance",
+        "secure-code-review", "plan-threat-model"
       ],
       "agents": ["architect", "code-reviewer", "security-reviewer"]
     },
@@ -54,10 +65,10 @@
       "description": "Codebase analysis, backend, frontend, database, testing and GitHub workflow standards.",
       "category": "development",
       "skills": [
-        "codebase-analysis", "architecture-design", "project-bootstrap",
-        "backend-development", "frontend-development", "database-engineering",
-        "testing-validation", "performance-investigation", "security-review",
-        "github-commits", "github-pull-requests"
+        "plan-codebase-analysis", "plan-architecture", "build-project-setup",
+        "build-backend", "build-frontend", "build-database",
+        "test-validation", "test-performance", "secure-code-review",
+        "build-commits", "review-pull-request"
       ],
       "agents": ["architect", "code-reviewer", "test-engineer"]
     },
@@ -67,7 +78,7 @@
       "role": "Product, UX and UI designers",
       "description": "UI/UX and accessibility reviews, design systems and design-to-code handoff.",
       "category": "design",
-      "skills": ["ui-ux-review", "design-system", "frontend-development"],
+      "skills": ["review-ui-ux", "build-design-system", "build-frontend"],
       "agents": []
     },
     {
@@ -76,7 +87,7 @@
       "role": "Marketing, content and growth teams",
       "description": "On-brand marketing copy, campaign planning and measurement, and search-friendly content.",
       "category": "productivity",
-      "skills": ["marketing-copy", "campaign-planning", "seo-content"],
+      "skills": ["create-marketing-copy", "plan-campaign", "create-seo-content"],
       "agents": []
     },
     {
@@ -85,7 +96,7 @@
       "role": "SEO specialists and web content teams",
       "description": "Technical SEO audits, content briefs and on-page optimisation, and Core Web Vitals investigation.",
       "category": "productivity",
-      "skills": ["seo-audit", "seo-content", "performance-investigation", "frontend-development"],
+      "skills": ["review-seo", "create-seo-content", "test-performance", "build-frontend"],
       "agents": []
     },
     {
@@ -95,8 +106,8 @@
       "description": "Risk-based test plans, test cases, bug reports, automated testing and release readiness.",
       "category": "development",
       "skills": [
-        "test-planning", "testing-validation", "release-readiness", "performance-investigation",
-        "codebase-analysis", "ui-ux-review", "github-pull-requests"
+        "plan-test-strategy", "test-validation", "ship-readiness", "test-performance",
+        "plan-codebase-analysis", "review-ui-ux", "review-pull-request"
       ],
       "agents": ["test-engineer", "code-reviewer"]
     },
@@ -107,8 +118,8 @@
       "description": "Security reviews, threat modeling, supply-chain security, repository governance and incident response.",
       "category": "security",
       "skills": [
-        "security-review", "threat-modeling", "supply-chain-security", "github-repo-governance",
-        "github-actions", "incident-response", "infrastructure-as-code", "codebase-analysis"
+        "secure-code-review", "plan-threat-model", "secure-supply-chain", "secure-repo-governance",
+        "ship-github-actions", "operate-incident", "build-iac", "plan-codebase-analysis"
       ],
       "agents": ["security-reviewer", "code-reviewer"]
     }

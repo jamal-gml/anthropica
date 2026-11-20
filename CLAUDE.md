@@ -8,12 +8,17 @@ This repository publishes role-based Claude skill packs as a Claude Code plugin 
 - After any source change run `python scripts/build.py` and commit the generated output in the same commit. CI fails if it is stale.
 
 ## Adding or changing a skill
-1. Create `skills/<name>/SKILL.md`. The name is lowercase-hyphenated and equals the folder name.
-2. Frontmatter: `name` and `description`. The description says what the skill does **and** when to use it ("Use when ..."), in under 1024 characters. The build rejects descriptions without a trigger.
-3. Body: short, imperative, checklist-style; under about 150 lines. Put the method, then the safety gates, then the expected output. Industry-standard practice, no organisation-specific names or secrets.
-4. Skills must tell Claude to ask before destructive or outward-facing actions (deploys, force pushes, production changes, publishing).
-5. Add the skill to every relevant pack in `packs.json`. The full `anthropica` pack picks it up automatically. The build prints a note for skills that are only in the full pack.
-6. Run the build, then `claude plugin validate .` and `claude plugin validate plugins/<pack>` if the Claude CLI is available.
+1. Create `skills/<phase>-<topic>/SKILL.md`, lowercase-hyphenated, folder name = `name`. `<phase>` is one of `packs.json` → `phases` (plan, build, create, test, review, secure, ship, operate, core); the build rejects anything else. `core-*` skills are the `core` list added to every pack. `workflow` is reserved: the build generates one per pack (phase map + next-skill advice) and appends a "Phase / Next" line to every skill, so never write either by hand.
+2. Frontmatter: `name` and a **single-line** `description` (the build parser reads one line), ideally under 400 characters: what it does, then "Use when ..." with the concrete triggers (task words, file names, errors). Add "Not for X (use `<other-skill>`)" where skills overlap.
+3. Body, in this order: `# Title`, one-line purpose, `## Procedure` (numbered steps), `## Rules` (decision rules, thresholds, gotchas), `## Safety gates`, `## Output` (a template). Target 60-150 lines.
+4. Write only what Claude would not do unprompted: exact commands, thresholds, decision tables, failure modes, ordering that matters. Cut generic advice ("write clean code", "follow best practices"). Imperative, terse, no filler, tables for mappings.
+5. Long or situational material (full checklists, examples, per-tool detail) goes in `skills/<name>/references/<topic>.md`, linked from SKILL.md with when to read it: "Read `references/terraform.md` when the repo uses Terraform." Only the description is always in context; the body loads on use; references load only when read.
+6. Don't repeat another skill: refer to it by name (`ship-github-actions`). Industry-standard, vendor-neutral practice, no organisation-specific names or secrets.
+7. Skills must tell Claude to ask before destructive or outward-facing actions (deploys, force pushes, production changes, publishing, sending).
+8. Add the skill to every relevant pack in `packs.json`. The full `anthropica` pack picks it up automatically. The build prints a note for skills that are only in the full pack.
+9. Run the build, then `claude plugin validate .` and `claude plugin validate plugins/<pack>` if the Claude CLI is available.
+
+Renaming a skill breaks users' commands: bump MAJOR and add the old and new names to the migration table in `README.md`.
 
 ## Adding a role pack
 Add an entry to `packs.json` → `packs` with `name` (`anthropica-<role>`), `title`, `role`, `description`, `category`, `skills` and `agents`. Core skills (`core`) are added to every pack automatically. Rebuild.
@@ -42,4 +47,4 @@ Full checklist and recovery steps: `RELEASING.md`.
 Ask the repository owner before tagging, publishing a release, or changing repository settings.
 
 ## Commits and PRs
-Follow `skills/github-commits` and `skills/github-pull-requests`: Conventional Commits (`feat(skills): add seo-audit`), small focused PRs, squash merge into `main`.
+Follow `skills/build-commits` and `skills/review-pull-request`: Conventional Commits (`feat(skills): add review-seo`), small focused PRs, squash merge into `main`.

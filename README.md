@@ -27,7 +27,15 @@ Role-based Claude skill packs for Claude Code, Claude Desktop, Claude Cowork and
 | **Security** | Application, cloud and product security teams | 11 | 2 | `/plugin install anthropica-security@anthropica` |
 <!-- packs:end -->
 
-Every pack also includes the core skills: `token-efficiency`, `prompt-engineering` and `technical-documentation`. Each pack's README in `plugins/<pack>/` lists its skills and agents.
+Every pack also includes the core skills: `core-token-efficiency`, `core-prompt-engineering` and `core-documentation`. Each pack's README in `plugins/<pack>/` lists its skills and agents.
+
+## Skills follow the delivery phases
+
+Skill names start with their phase, so a pack reads in the order you work:
+
+**Plan** > **Build** (or **Create** for content) > **Test** > **Review** > **Secure** > **Ship** > **Operate**, plus `core-*` skills for any phase.
+
+Every pack has a `workflow` skill (`/anthropica-devops:workflow`) that shows its skills by phase and suggests what to use next, and each skill ends with a pointer to the next phase.
 
 ## Install in Claude Code
 
@@ -41,7 +49,30 @@ Run inside Claude Code:
 
 Replace `anthropica-devops` with your pack from the table. Choose **User** scope to use it across all your projects, or **Project** scope to share it with a team through the repository's `.claude/settings.json`. Run `/reload-plugins` if prompted. Install more than one pack if your work spans roles.
 
-Claude loads a skill automatically when a task matches its description; only the one-line descriptions sit in context until then. You can also invoke a skill directly, for example `/anthropica-devops:github-pull-requests`. Use `/skills` to list skills and `/plugin` to disable or uninstall.
+Claude loads a skill automatically when a task matches its description; only the one-line descriptions sit in context until then. You can also invoke a skill directly, for example `/anthropica-devops:review-pull-request`. Use `/skills` to list skills and `/plugin` to disable or uninstall.
+
+### Upgrading from 1.x
+
+Version 2.0 renamed every skill to `<phase>-<topic>`. Update any saved commands or instructions that name a skill:
+
+| 1.x name | 2.0 name | | 1.x name | 2.0 name |
+|---|---|---|---|---|
+| `codebase-analysis` | `plan-codebase-analysis` | | `seo-content` | `create-seo-content` |
+| `architecture-design` | `plan-architecture` | | `testing-validation` | `test-validation` |
+| `threat-modeling` | `plan-threat-model` | | `performance-investigation` | `test-performance` |
+| `test-planning` | `plan-test-strategy` | | `github-pull-requests` | `review-pull-request` |
+| `campaign-planning` | `plan-campaign` | | `ui-ux-review` | `review-ui-ux` |
+| `project-bootstrap` | `build-project-setup` | | `seo-audit` | `review-seo` |
+| `backend-development` | `build-backend` | | `security-review` | `secure-code-review` |
+| `frontend-development` | `build-frontend` | | `supply-chain-security` | `secure-supply-chain` |
+| `database-engineering` | `build-database` | | `github-repo-governance` | `secure-repo-governance` |
+| `infrastructure-as-code` | `build-iac` | | `devops-ci-cd` | `ship-ci-cd` |
+| `containers-kubernetes` | `build-containers` | | `github-actions` | `ship-github-actions` |
+| `design-system` | `build-design-system` | | `release-readiness` | `ship-readiness` |
+| `github-commits` | `build-commits` | | `release-management` | `ship-release` |
+| `marketing-copy` | `create-marketing-copy` | | `observability-monitoring` | `operate-observability` |
+| `token-efficiency` | `core-token-efficiency` | | `incident-response` | `operate-incident` |
+| `prompt-engineering` | `core-prompt-engineering` | | `technical-documentation` | `core-documentation` |
 
 ### Rolling out to a team
 
@@ -185,7 +216,7 @@ No MCP servers, hooks, background processes or external connections. Skills are 
 
 ## Contributing
 
-Each skill has one source file in `skills/<name>/SKILL.md`, and each agent one in `agents/<name>.md`. `packs.json` decides which skills and agents each role pack gets. `plugins/`, `.claude-plugin/marketplace.json`, `dist/claude-ai-skills/` and the pack table above are generated:
+Each skill's source is `skills/<phase>-<topic>/SKILL.md`, with optional `references/` files Claude reads only when needed, and each agent's is `agents/<name>.md`. `packs.json` decides which skills and agents each role pack gets and defines the phases. `plugins/` (including each pack's `workflow` skill and the "Next" line on every skill), `.claude-plugin/marketplace.json`, `dist/claude-ai-skills/` and the pack table above are generated:
 
 ```bash
 python scripts/build.py
@@ -196,7 +227,7 @@ CI fails if the generated files are out of date. See [CLAUDE.md](CLAUDE.md) for 
 ## Repository layout
 
 ```text
-skills/<name>/SKILL.md        source of every skill
+skills/<name>/SKILL.md        source of every skill (+ optional references/)
 agents/<name>.md              source of every agent
 packs.json                    role packs, version, marketplace metadata
 scripts/build.py              generates everything below
